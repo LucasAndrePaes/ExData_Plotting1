@@ -1,0 +1,10 @@
+tab2 <- read.table("household_power_consumption.txt", colClasses = c('character','character','numeric','numeric','numeric','numeric','numeric','numeric','numeric'), header=TRUE, sep=";", na.strings = "?")
+tab2$Date <- as.Date(tab2$Date,"%d/%m/%Y")
+tab2 <- subset(tab2,Date <= as.Date("2007/2/2") & Date >= as.Date("2007/2/1"))
+tab2 <- tab2[complete.cases(tab2),]
+dateTime <- setNames(paste(tab2$Date, tab2$Time),"DateTime")
+tab2 <- cbind(dateTime, tab2[,!(names(tab2) %in% c("Date","Time"))])
+tab2$dateTime <- as.POSIXct(dateTime)
+plot(tab2$Global_active_power~tab2$dateTime, type="l", xlab="", ylab="Global Active Power (kW)")
+dev.copy(png, file="plot2.png", width=480, height=480)
+dev.off()
